@@ -107,7 +107,7 @@ function getArrayOfStrings(arr) {
  *    [ false, 0, NaN, '', undefined ]   => [ ]
  */
 function removeFalsyValues(arr) {
-  return arr.filter((el) => !el);
+  return arr.filter((el) => el);
 }
 
 /**
@@ -181,7 +181,7 @@ function getHead(arr, n) {
  *    [ 'a', 'b', 'c', 'd'], 3  => [ 'b', 'c', 'd' ]
  */
 function getTail(arr, n) {
-  return arr.splice(arr.length - 1 + n, n);
+  return arr.splice(arr.length - n, n);
 }
 
 
@@ -207,9 +207,11 @@ function getTail(arr, n) {
  */
 function toCsvText(arr) {
   let str = '';
-  arr.forEach((el) => {
+  arr.forEach((el, index) => {
     const bit = el.join(',');
-    str += '\n';
+    if (index !== 0) {
+      str += '\n';
+    }
     str += bit;
   });
   return str;
@@ -246,15 +248,16 @@ function toArrayOfSquares(arr) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] => [ 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 ]
  */
 function getMovingSum(arr) {
-  const newArr = [];
-  arr.forEach((el, index) => {
-    if (index === 0) {
-      newArr.push(el);
-    } else if (index + 1 < arr.length) {
-      newArr.push(el + arr[index + 1]);
+  return arr.reduce((acc, value) => {
+    if (acc.length === 0) {
+      acc.push(value);
+      return acc;
     }
-  });
+    acc.push(value + acc[acc.length - 1]);
+    return acc;
+  }, []);
 }
+
 
 /**
  * Returns every second item from the specified array:
