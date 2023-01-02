@@ -169,8 +169,10 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return (
+    Math.sqrt((circle.center.x - point.x) ** 2 + (circle.center.y - point.y) ** 2) < circle.radius
+  );
 }
 
 
@@ -185,8 +187,17 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const arr = str.split('');
+  const singleChars = [];
+  const doubleChars = arr.filter((el, index) => str.indexOf(el) !== index);
+
+  arr.forEach((el) => {
+    if (!doubleChars.includes(el)) {
+      singleChars.push(el);
+    }
+  });
+  return singleChars.length ? singleChars[0] : null;
 }
 
 
@@ -212,8 +223,8 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  return `${isStartIncluded ? '[' : '('}${[a, b].sort().join(', ')}${isEndIncluded ? ']' : ')'}`;
 }
 
 
@@ -279,8 +290,19 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = String(ccn).split('');
+  const lastNum = arr.pop();
+  const sum = arr
+    .reverse()
+    .map((el, index) => {
+      if (!(index % 2)) {
+        return el * 2 > 9 ? el * 2 - 9 : el * 2;
+      }
+      return +el;
+    })
+    .reduce((a, b) => a + b);
+  return (1000 - sum) % 10 === +lastNum;
 }
 
 /**
@@ -327,25 +349,23 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(str) {
-  for (let i = 0; i < str.length / 2; i += 1) {
-    if (str[i] === '[') {
-      if (str[str.length - 1 - i] !== ']') {
-        return false;
+function isBracketsBalanced(/* str */) {
+  /* const arr = str.split('');
+  let index = 0;
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr)
+    const bracket = arr[i]
+    if (bracket === '[') {
+      index = arr.lastIndexOf(']')
+      if (index !== -1) {
+        arr.splice(index)
+      } else {
+
       }
+
     }
-    if (str[i] === '{') {
-      if (str[str.length - 1 - i] !== '}') {
-        return false;
-      }
-    }
-    if (str[i] === '(') {
-      if (str[str.length - 1 - i] !== ')') {
-        return false;
-      }
-    }
-  }
-  return true;
+  } */
+  throw new Error('Not implemented');
 }
 
 
@@ -369,8 +389,8 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return (num).toString(n);
 }
 
 
@@ -386,8 +406,15 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let str = '';
+  const arr = pathes.map((path) => path.split('/'));
+  arr[0].forEach((dir, index) => {
+    if (arr.every((path) => path[index] === dir)) {
+      str += `${dir}/`;
+    }
+  });
+  return str;
 }
 
 
@@ -409,7 +436,15 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
+
 function getMatrixProduct(/* m1, m2 */) {
+  // const arr = []
+  // m1.forEach((row, index) => {
+  //   m2.forEach((_row2) => {
+  //   const cell = m2.map((row2) => row2[index]);
+  //   arr.push(row.map((num, numIndex) => num * cell[numIndex]).reduce((a, b) => a + b));
+  //   })
+  // })
   throw new Error('Not implemented');
 }
 
@@ -445,6 +480,31 @@ function getMatrixProduct(/* m1, m2 */) {
  *
  */
 function evaluateTicTacToePosition(/* position */) {
+  /* let winner;
+  const columns = position.map((_el, index) => position.map((row) => row[index]));
+
+  const colWinner = columns.find((col) => col.every((el) => col[0] && el === col[0]));
+  if (colWinner) {
+    const a = colWinner[0];
+    winner = a;
+  }
+
+  const rowWinner = position.find((row) => row.every((el) => row[0] && el === row[0]));
+  if (rowWinner) {
+    const a = rowWinner[0];
+    winner = a;
+  }
+
+  if (position[1][1]) {
+    if (
+      (position[0][0] && position[0][0] === position[2][2])
+      || (position[0][2] && position[0][2] === position[2][0])) {
+      const a = position[1][1];
+      winner = a;
+    }
+  }
+  return winner;
+  */
   throw new Error('Not implemented');
 }
 
